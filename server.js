@@ -9,29 +9,36 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use(cors());
 
-// MongoDB Connection (Explicitly connecting to `lava` database)
+// MongoDB Connection
 const MONGO_URI = "mongodb+srv://sam:FtrSurY4KCDAdsU9@cluster0.vaxjv.mongodb.net/lava?retryWrites=true&w=majority&appName=Cluster0";
 
 mongoose.connect(MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-  .then(() => console.log("✅ MongoDB Connected to 'lava' database"))
+  .then(() => console.log("✅ MongoDB Connected"))
   .catch(err => console.error("❌ MongoDB Connection Error:", err));
 
-// Define Schema and Model for `admin` collection
-const adminSchema = new mongoose.Schema({
-  user_id: String,
-  password: String
-});
+// Define Schema and Model
+const adminSchema = new mongoose.Schema({}, { strict: false }); // Allow all fields
 
-const Admin = mongoose.model("Admin", adminSchema, "admin"); // Accessing "admin" collection in "lava" database
+const Admin = mongoose.model("admin", adminSchema, "admin"); // Accessing "admin" collection inside "lava" DB
 
-// GET method to fetch only user_id and password from `admin` collection
+// GET method to fetch only user_id and password
 app.get("/admins", async (req, res) => {
   try {
-    const admins = await Admin.find({}, "user_id password -_id"); // Fetch only user_id and password, hide _id
+    const admins = await Admin.find({}, "user_id password"); // Fetch user_id and password only
     res.json(admins);
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Server error", error: err });
+  }
+});
+
+// GET method to fetch all data from admin collection
+app.get("/admins/all", async (req, res) => {
+  try {
+    const allAdmins = await Admin.find({}); // Fetch everything
+    res.json(allAdmins);
   } catch (err) {
     res.status(500).json({ success: false, message: "Server error", error: err });
   }
