@@ -75,7 +75,7 @@ const sendEmail = async (data) => {
   const mailOptions = {
     from: '"Water Monitoring System" <754f2c001@smtp-brevo.com>',
     to:"ping.johnsamuel@gmail.com",
-    cc: "palanisamytamil753@gmail.com", // Send to company email if available
+    cc: "palanisamytamil753@gmail.com, spalanisamy292@gmail.com", // Send to company email if available
     subject: `🚨 Water Quality Alert: ${data.company_name}`,
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
